@@ -66,7 +66,7 @@ def find_forkhead(chrom_ident, pattern):
     for a in all_matches:
         find_motif(a,chromosome)
 
-    for a in potential_origins:
+    for a in all_matches:
         a = rev_comp(a)
         find_motif(a,chromosome)
 
