@@ -50,23 +50,7 @@ def find_forkhead(chrom_ident, pattern):
     #acs = 'TTATATGTTTT'
     #acs = 'AAAACATATAA'
     import regex
-    potential_origins = []
-
-    for a in watson_finds:
-        filtered_watson = []
-        a = str(a)
-        filtered_watson = regex.findall(acs, a)
-        if len(filtered_watson) > 0:
-            potential_origins.append(str(a))
-
-    for a in crick_finds:
-        filtered_crick = []
-        a = str(a)
-        filtered_crick = regex.findall(acs, a)
-        if len(filtered_crick) > 0:
-            potential_origins.append(a)
-
-    print(potential_origins)
+    all_matches = watson_finds + crick_finds
 
     motif_start_pos = []
     motif_end_pos = []
@@ -79,7 +63,7 @@ def find_forkhead(chrom_ident, pattern):
                 motif_end_pos.append((a+1) + len(motif))
                 motif_seq.append(seq[a:a+len(motif)])
 
-    for a in potential_origins:
+    for a in all_matches:
         find_motif(a,chromosome)
 
     for a in potential_origins:
@@ -88,7 +72,7 @@ def find_forkhead(chrom_ident, pattern):
 
     count = 0
 
-    with open('fkh_motifs_near_acs.txt', 'a') as f:
+    with open('fkh_motifs.txt', 'a') as f:
         for a in range(0, len(motif_start_pos)):
             match_pattern = "Fkh pattern: {}\n".format(pattern)
             motif_midpoint = (motif_start_pos[a] + motif_end_pos[a]) / 2
