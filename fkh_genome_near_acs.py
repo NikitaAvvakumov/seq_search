@@ -88,12 +88,11 @@ def find_forkhead(chrom_ident, pattern):
 
     count = 0
 
-    with open('fkh_motifs_near_acs.txt', 'a') as f:
+    with open('fkh_motifs_near_acs.csv', 'a') as f:
         for a in range(0, len(motif_start_pos)):
-            match_pattern = "Fkh pattern: {}\n".format(pattern)
-            motif_midpoint = (motif_start_pos[a] + motif_end_pos[a]) / 2
-            chrom_location = "{}, {}\n".format(chrom_ident, str(motif_midpoint))
-            match_sequence = "{}\n\n".format(str(motif_seq[a]))
+            match_pattern = "Fkh pattern: {},".format(pattern)
+            chrom_location = "{}, {}, {},".format(chrom_ident, str(motif_start_pos[a]), str(motif_end_pos[a]))
+            match_sequence = "{}\n".format(str(motif_seq[a]))
             f.write(match_pattern)
             f.write(chrom_location)
             f.write(match_sequence)
