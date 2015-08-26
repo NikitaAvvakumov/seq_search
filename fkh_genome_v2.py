@@ -52,7 +52,7 @@ def find_forkhead(chrom_ident, pattern):
     if len(all_starts) > 0:
         with open(file_name, 'a') as f:
             for position in all_starts:
-                f.write("{}, {}, {}\n".format(chrom_ident, position, pattern["name"]))
+                f.write("{},{},{}\n".format(chrom_ident, position, pattern["name"]))
 
 # fkh_pattern_1 = '(T[AG]TTTA[CT].{70,74}[AG]TAAA[CT]A)'
 # fkh_pattern_2 = '(T[AG]TTTA[CT].{70,74}T[AG]TTTA[CT])'
