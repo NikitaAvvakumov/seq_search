@@ -40,28 +40,28 @@ def find_forkhead(chrom_ident, pattern):
     chromosome_rev = rev_comp(chromosome)
 
     import regex
-    watson_matches = regex.finditer(pattern, chromosome)
-    crick_matches = regex.finditer(pattern, chromosome_rev)
+    watson_matches = regex.finditer(pattern["pattern"], chromosome)
+    crick_matches = regex.finditer(pattern["pattern"], chromosome_rev)
     watson_starts = [match.start() for match in watson_matches]
     crick_starts = [match.start() for match in crick_matches]
     all_starts = list(set(watson_starts + crick_starts))
     all_starts.sort()
-    print(all_starts)
+    print("Pattern {} matches: {}".format(pattern["name"],all_starts))
 
     file_name = "{}_fkh_motifs.csv".format(chrom_ident)
     if len(all_starts) > 0:
         with open(file_name, 'a') as f:
-            for a in all_starts:
-                f.write("{}, {}\n".format(chrom_ident, a))
+            for position in all_starts:
+                f.write("{}, {}, {}\n".format(chrom_ident, position, pattern["name"]))
 
 # fkh_pattern_1 = '(T[AG]TTTA[CT].{70,74}[AG]TAAA[CT]A)'
 # fkh_pattern_2 = '(T[AG]TTTA[CT].{70,74}T[AG]TTTA[CT])'
 # fkh_pattern_3 = '([AG]TAAA[CT]A.{70,74}T[AG]TTTA[CT])'
 # fkh_pattern_4 = '([AG]TAAA[CT]A.{70,74}[AG]TAAA[CT]A)'
-fkh_pattern_1 = '(T[AG]TT[TG][AG][CT].{70,74}[AG][CT][AC]AA[CT]A)'
-fkh_pattern_2 = '(T[AG]TT[TG][AG][CT].{70,74}T[AG]TT[TG][AG][CT])'
-fkh_pattern_3 = '([AG][CT][AC]AA[CT]A.{70,74}T[AG]TT[TG][AG][CT])'
-fkh_pattern_4 = '([AG][CT][AC]AA[CT]A.{70,74}[AG][CT][AC]AA[CT]A)'
+fkh_pattern_1 = { "name": "1", "pattern": '(T[AG]TT[TG][AG][CT].{70,74}[AG][CT][AC]AA[CT]A)' }
+fkh_pattern_2 = { "name": "2", "pattern": '(T[AG]TT[TG][AG][CT].{70,74}T[AG]TT[TG][AG][CT])' }
+fkh_pattern_3 = { "name": "3", "pattern": '([AG][CT][AC]AA[CT]A.{70,74}T[AG]TT[TG][AG][CT])' }
+fkh_pattern_4 = { "name": "4", "pattern": '([AG][CT][AC]AA[CT]A.{70,74}[AG][CT][AC]AA[CT]A)' }
 
 find_forkhead('chrI', fkh_pattern_1)
 find_forkhead('chrI', fkh_pattern_2)
