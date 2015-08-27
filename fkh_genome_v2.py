@@ -67,8 +67,7 @@ fkh_patterns = [
         { "name": "3", "pattern": '([AG][CT][AC]AA[CT]A.{70,74}T[AG]TT[TG][AG][CT])' }
         ]
 
-# chromosomes = "I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI".split()
-chromosomes = ["I"]
+chromosomes = "I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI".split()
 for chromosome in chromosomes:
     print("Chromosome {}:".format(chromosome))
     chr_id = "chr{}".format(chromosome)
