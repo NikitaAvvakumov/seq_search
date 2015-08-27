@@ -42,62 +42,35 @@ def find_forkhead(chrom_ident, pattern):
     import regex
     watson_matches = regex.finditer(pattern["pattern"], chromosome)
     crick_matches = regex.finditer(pattern["pattern"], chromosome_rev)
-    watson_starts = [match.start() for match in watson_matches]
-    crick_starts = [match.start() for match in crick_matches]
-    all_starts = list(set(watson_starts + crick_starts))
-    all_starts.sort()
-    print("Pattern {} matches: {}".format(pattern["name"],all_starts))
+    all_matches = [match.group(0) for match in watson_matches]
+    all_matches += [rev_comp(match.group(0)) for match in crick_matches]
+    all_matches = list(set(all_matches))
 
+    fkh_motif_coords = []
+    for match in all_matches:
+        matches = regex.finditer(match, chromosome)
+        match_starts = [match.start() for match in matches]
+        fkh_motif_coords += match_starts
+
+    fkh_motif_coords.sort()
+    print("Pattern {} matches: {}".format(pattern["name"], fkh_motif_coords))
     file_name = "{}_fkh_motifs.csv".format(chrom_ident)
-    if len(all_starts) > 0:
+
+    if len(fkh_motif_coords) > 0:
         with open(file_name, 'a') as f:
-            for position in all_starts:
+            for position in fkh_motif_coords:
                 f.write("{},{},{}\n".format(chrom_ident, position, pattern["name"]))
 
-# fkh_pattern_1 = '(T[AG]TTTA[CT].{70,74}[AG]TAAA[CT]A)'
-# fkh_pattern_2 = '(T[AG]TTTA[CT].{70,74}T[AG]TTTA[CT])'
-# fkh_pattern_3 = '([AG]TAAA[CT]A.{70,74}T[AG]TTTA[CT])'
-# fkh_pattern_4 = '([AG]TAAA[CT]A.{70,74}[AG]TAAA[CT]A)'
-fkh_pattern_1 = { "name": "1", "pattern": '(T[AG]TT[TG][AG][CT].{70,74}[AG][CT][AC]AA[CT]A)' }
-fkh_pattern_2 = { "name": "2", "pattern": '(T[AG]TT[TG][AG][CT].{70,74}T[AG]TT[TG][AG][CT])' }
-fkh_pattern_3 = { "name": "3", "pattern": '([AG][CT][AC]AA[CT]A.{70,74}T[AG]TT[TG][AG][CT])' }
-fkh_pattern_4 = { "name": "4", "pattern": '([AG][CT][AC]AA[CT]A.{70,74}[AG][CT][AC]AA[CT]A)' }
+fkh_patterns = [
+        { "name": "1", "pattern": '(T[AG]TT[TG][AG][CT].{70,74}[AG][CT][AC]AA[CT]A)' },
+        { "name": "2", "pattern": '(T[AG]TT[TG][AG][CT].{70,74}T[AG]TT[TG][AG][CT])' },
+        { "name": "3", "pattern": '([AG][CT][AC]AA[CT]A.{70,74}T[AG]TT[TG][AG][CT])' }
+        ]
 
-find_forkhead('chrI', fkh_pattern_1)
-find_forkhead('chrI', fkh_pattern_2)
-find_forkhead('chrI', fkh_pattern_3)
-find_forkhead('chrI', fkh_pattern_4)
-# find_forkhead('chrII', fkh_pattern_1)
-# find_forkhead('chrIII', fkh_pattern_1)
-# find_forkhead('chrIV', fkh_pattern_1)
-# find_forkhead('chrV', fkh_pattern_1)
-# find_forkhead('chrVI', fkh_pattern_1)
-# find_forkhead('chrVII', fkh_pattern_1)
-# find_forkhead('chrVIII', fkh_pattern_1)
-# find_forkhead('chrIX', fkh_pattern_1)
-# find_forkhead('chrX', fkh_pattern_1)
-# find_forkhead('chrXI', fkh_pattern_1)
-# find_forkhead('chrXII', fkh_pattern_1)
-# find_forkhead('chrXII', fkh_pattern_1)
-# find_forkhead('chrXIII', fkh_pattern_1)
-# find_forkhead('chrXIV', fkh_pattern_1)
-# find_forkhead('chrXV', fkh_pattern_1)
-# find_forkhead('chrXVI', fkh_pattern_1)
-#
-# find_forkhead('chrI', fkh_pattern_allan)
-# find_forkhead('chrII', fkh_pattern_allan)
-# find_forkhead('chrIII', fkh_pattern_allan)
-# find_forkhead('chrIV', fkh_pattern_allan)
-# find_forkhead('chrV', fkh_pattern_allan)
-# find_forkhead('chrVI', fkh_pattern_allan)
-# find_forkhead('chrVII', fkh_pattern_allan)
-# find_forkhead('chrVIII', fkh_pattern_allan)
-# find_forkhead('chrIX', fkh_pattern_allan)
-# find_forkhead('chrX', fkh_pattern_allan)
-# find_forkhead('chrXI', fkh_pattern_allan)
-# find_forkhead('chrXII', fkh_pattern_allan)
-# find_forkhead('chrXII', fkh_pattern_allan)
-# find_forkhead('chrXIII', fkh_pattern_allan)
-# find_forkhead('chrXIV', fkh_pattern_allan)
-# find_forkhead('chrXV', fkh_pattern_allan)
-# find_forkhead('chrXVI', fkh_pattern_allan)
+# chromosomes = "I II III IV V VI VII VIII IX X XI XII XIII XIV XV XVI".split()
+chromosomes = ["I"]
+for chromosome in chromosomes:
+    print("Chromosome {}:".format(chromosome))
+    chr_id = "chr{}".format(chromosome)
+    for pattern in fkh_patterns:
+        find_forkhead(chr_id, pattern)
