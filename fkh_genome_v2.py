@@ -54,7 +54,7 @@ def find_forkhead(chrom_ident, pattern):
 
     fkh_motif_coords.sort()
     print("Pattern {} matches: {}".format(pattern["name"], fkh_motif_coords))
-    file_name = "{}_fkh_motifs.csv".format(chrom_ident)
+    file_name = "output_data\{}_fkh_motifs.csv".format(chrom_ident)
 
     if len(fkh_motif_coords) > 0:
         with open(file_name, 'a') as f:

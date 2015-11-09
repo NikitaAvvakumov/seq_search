@@ -37,11 +37,11 @@ end
 
 def read_fkh_coords_from_file_for(chromosome)
   chrom_id = LAZY_CONVERTER[chromosome]
-  CSV.read("chr#{chrom_id}_fkh_motifs.csv").sort { |a, b| a[1].to_i <=> b[1].to_i }
+  CSV.read("input_data/chr#{chrom_id}_fkh_motifs.csv").sort { |a, b| a[1].to_i <=> b[1].to_i }
 end
 
 def mark_locations(fkh_sites, chromosome)
-  CSV.foreach("GSE55155_chrom#{chromosome}.csv") do |array_data|
+  CSV.foreach("input_data/GSE55155_chrom#{chromosome}.csv") do |array_data|
     array_coord = array_data[1].to_i
     match = false
     fkh_sites.each do |fkh_site|
@@ -49,14 +49,14 @@ def mark_locations(fkh_sites, chromosome)
       pattern = fkh_site[2]
       if (array_coord - 25) < coord && (array_coord + 25) >= coord
         match = true
-        CSV.open("fkh_chrom#{chromosome}.csv", "a") do |csv|
+        CSV.open("output_data/fkh_chrom#{chromosome}.csv", "a") do |csv|
           csv << array_data + FKH_PATTERNS[pattern]
         end
       end
     end
 
     unless match
-      CSV.open("fkh_chrom#{chromosome}.csv", "a") do |csv|
+      CSV.open("output_data/fkh_chrom#{chromosome}.csv", "a") do |csv|
         csv << array_data
       end
     end
