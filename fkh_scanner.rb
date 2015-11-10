@@ -72,7 +72,7 @@ class Scanner
   def output_final_data_to_file
     file = File.open('output_data/fkh_aaa_motifs_near_ars.txt', 'w')
     file.puts "Total number of ARS-proximal divergent Fkh with internal A/T stretch: #{@fkh_aaa_sequences.size}"
-    file.puts @fkh_aaa_sequences.map { |seq| seq.definition }
+    file.puts @fkh_aaa_sequences.map { |seq| seq.definition.split(',').first }
     file.close
     puts "Final data written to 'output_data/fkh_aaa_motifs_near_ars.txt'"
   end
