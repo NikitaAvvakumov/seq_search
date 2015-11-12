@@ -8,7 +8,7 @@ end
 class Scanner
   include Bio
   DIVERGENT_FKH_REGEX = /T[AG]TT[TG][AG][CT].{65,80}[AG][CT][AC]AA[CT]A/
-  MELT_STRETCH = /(A{5,}|T{5,}|A{4,}.*A{4,})/
+  MELT_STRETCH = /(A{5,}|T{5,}|A{4,}.*A{4,}|T{4,}.*T{4,})/
 
   def initialize(file_name:, tail_length_to_trim:)
     @file = file_name
@@ -64,8 +64,7 @@ class Scanner
   end
 
   def fkh_and_aa_within(seq)
-    fkh_match = seq.match(DIVERGENT_FKH_REGEX)
-    fkh_match.to_a.map { |n| n.match(MELT_STRETCH) }.any? if fkh_match
+    seq.scan(DIVERGENT_FKH_REGEX).map { |n| n.match(MELT_STRETCH) }.any?
   end
 
   def output_final_data_to_file
