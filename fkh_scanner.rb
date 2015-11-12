@@ -8,7 +8,7 @@ end
 class Scanner
   include Bio
   DIVERGENT_FKH_REGEX = /T[AG]TT[TG][AG][CT].{65,80}[AG][CT][AC]AA[CT]A/
-  MELT_STRETCH = /(A{5,}|T{5,})/
+  MELT_STRETCH = /(A{5,}|T{5,}|A{4,}.*A{4,})/
 
   def initialize(file_name:, tail_length_to_trim:)
     @file = file_name
@@ -20,7 +20,6 @@ class Scanner
     select_ars_sequences_from_input_data
     puts "Total ARS elements: #{@ars_sequences.size}"
     trim_tails
-    # puts @ars_sequences.first.data.size
     find_divergent_fkh_sites
     puts "Divergent Fkh sites: #{@fkh_sequences.size}"
     find_fkh_aaa_sites
