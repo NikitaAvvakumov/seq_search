@@ -8,6 +8,7 @@ end
 class Scanner
   include Bio
   DIVERGENT_FKH_REGEX = /T[AG]TT[TG][AG][CT].{65,80}[AG][CT][AC]AA[CT]A/
+  CONVERGENT_FKH_REGEX = /[AG][CT][AC]AA[CT]A.{65,80}T[AG]TT[TG][AG][CT]/
   MELT_STRETCH = /(A{5,}|T{5,}|A{4,}.*A{4,}|T{4,}.*T{4,})/
 
   def initialize(file_name:, tail_length_to_trim:)
@@ -48,8 +49,10 @@ class Scanner
 
   def find_divergent_fkh_sites
     @fkh_sequences = @ars_sequences.select do |seq|
-      seq.seq =~ DIVERGENT_FKH_REGEX ||
-        rev_comp(seq.seq) =~ DIVERGENT_FKH_REGEX
+      # seq.seq =~ DIVERGENT_FKH_REGEX ||
+      #   rev_comp(seq.seq) =~ DIVERGENT_FKH_REGEX
+      seq.seq =~ CONVERGENT_FKH_REGEX ||
+        rev_comp(seq.seq) =~ CONVERGENT_FKH_REGEX
     end
   end
 
@@ -64,15 +67,18 @@ class Scanner
   end
 
   def fkh_and_aa_within(seq)
-    seq.scan(DIVERGENT_FKH_REGEX).map { |n| n.match(MELT_STRETCH) }.any?
+    # seq.scan(DIVERGENT_FKH_REGEX).map { |n| n.match(MELT_STRETCH) }.any?
+    seq.scan(CONVERGENT_FKH_REGEX).map { |n| n.match(MELT_STRETCH) }.any?
   end
 
   def output_final_data_to_file
-    file = File.open('output_data/fkh_aaa_motifs_near_ars.txt', 'w')
-    file.puts "Total number of ARS-proximal divergent Fkh with internal A/T stretch: #{@fkh_aaa_sequences.size}"
+    # file = File.open('output_data/divergent_fkh_aaa_motifs_near_ars.txt', 'w')
+    # file.puts "Total number of ARS-proximal divergent Fkh with internal A/T stretch: #{@fkh_aaa_sequences.size}"
+    file = File.open('output_data/convergent_fkh_aaa_motifs_near_ars.txt', 'w')
+    file.puts "Total number of ARS-proximal convergent Fkh with internal A/T stretch: #{@fkh_aaa_sequences.size}"
     file.puts @fkh_aaa_sequences.map { |seq| seq.definition.split(' ').first }.join(', ')
     file.close
-    puts "Final data written to 'output_data/fkh_aaa_motifs_near_ars.txt'"
+    puts "Final data written to #{file.path}"
   end
 end
 
